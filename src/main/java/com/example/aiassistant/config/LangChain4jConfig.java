@@ -34,9 +34,18 @@ public class LangChain4jConfig {
     @Value("${ai.vector-db.path:./data/vector.db}")
     private String vectorDbPath;
 
+    /**
+     * 支持多种大模型:
+     * 1. OpenAI (GPT-4o-mini, GPT-4o, GPT-3.5-turbo)
+     * 2. Moonshot (月之暗面) - 国内模型，兼容 OpenAI 格式
+     * 3. 其他兼容 OpenAI API 格式的模型
+     */
     @Bean
     public ChatLanguageModel chatLanguageModel() {
-        log.info("Initializing ChatLanguageModel with model: {}", openAiModel);
+        log.info("Initializing ChatLanguageModel");
+        log.info("  Model: {}", openAiModel);
+        log.info("  Base URL: {}", openAiBaseUrl);
+        
         return OpenAiChatModel.builder()
                 .apiKey(openAiApiKey)
                 .modelName(openAiModel)
