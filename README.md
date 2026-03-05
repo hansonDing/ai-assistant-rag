@@ -176,8 +176,61 @@ mvn test
 export OPENAI_API_KEY=your-api-key
 
 # 运行 LLM 调用测试
-mvn test -Dtest=LLMCallTest
+mvn test -Dtest=LLMProviderTest
 ```
+
+### Confluence API 测试
+
+项目包含使用 WireMock 模拟 Confluence REST API 的测试：
+
+```bash
+# 运行 Confluence 服务测试
+mvn test -Dtest=ConfluenceServiceTest
+
+# 运行 RAG Fallback 流程测试
+mvn test -Dtest=RagFallbackFlowTest
+```
+
+**ConfluenceServiceTest** 包含以下测试场景：
+- Confluence 启用/禁用状态检查
+- 成功搜索 Confluence 页面
+- 空结果处理
+- API 错误处理（401, 500, 超时）
+- HTML 内容清理
+- 特殊字符查询处理
+- 分页限制参数验证
+
+**RagFallbackFlowTest** 包含以下测试场景：
+- 本地有结果时不查询 Confluence
+- 本地无结果时自动 fallback 到 Confluence
+- 禁用 fallback 时的行为
+- Confluence 未启用时的处理
+- Confluence 查询失败时的优雅降级
+- 多结果合并
+- CQL 查询参数验证
+
+### 手动测试真实 Confluence 连接
+
+如果你需要测试与真实 Confluence 实例的连接：
+
+```bash
+# 1. 设置环境变量
+export CONFLUENCE_BASE_URL=https://your-domain.atlassian.net/wiki
+export CONFLUENCE_USERNAME=your-email@example.com
+export CONFLUENCE_API_TOKEN=your-api-token
+export CONFLUENCE_SPACE_KEY=YOURSPACE  # 可选
+
+# 2. 运行测试脚本
+./test-confluence.sh
+
+# 或者带搜索关键词
+./test-confluence.sh "Spring Boot"
+```
+
+**获取 API Token:**
+1. 访问 https://id.atlassian.com/manage-profile/security/api-tokens
+2. 点击 "Create API token"
+3. 复制生成的 token 作为 `CONFLUENCE_API_TOKEN`
 
 ### 使用测试脚本
 
